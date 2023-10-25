@@ -25,5 +25,13 @@ class Boto3Client:
 
         return save_file_name
 
+    def download(self, file_name):
+        # TODO memoery에 저장
+        self.client.download_fileobj(
+            AWS_DEFAULT_BUCKET, f'input/{file_name}', file_name
+        )
+
+        return file_name
+
 
 boto3Client = Boto3Client()
