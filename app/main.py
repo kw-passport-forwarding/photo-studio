@@ -1,6 +1,6 @@
-import requests
 import streamlit as st
 
+from client import post_sd_inference
 from image_storage import boto3Client
 
 # page setting
@@ -23,11 +23,12 @@ if img_file is not None:
     with input_content:
         st.subheader('Your photo')
         st.image(img_file, width=512)
-        boto3Client.upload(img_file, img_file.name)
-
-    response_image = requests.get('https://images.khan.co.kr/article/2022/06/09/l_2022060902000459200088941.jpg')
+        saved_file_name = boto3Client.upload(img_file, img_file.name)
 
     with output_content:
         st.subheader('Retouched photo')
-        st.image(response_image.content, width=512)
+
+        inferenced_file_name = post_sd_inference(saved_file_name)
+        response_image = boto3Client.download(inferenced_file_name)
+        st.image(response_image, width=512)
 
